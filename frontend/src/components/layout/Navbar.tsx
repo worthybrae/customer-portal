@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
                 Enigma Data
               </Link>
             </div>
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+            <div className="ml-6 flex space-x-8">
               {session && (
                 <>
                   <Link
@@ -37,10 +37,10 @@ const Navbar: React.FC = () => {
               )}
             </div>
           </div>
-          <div className="hidden sm:ml-6 sm:flex sm:items-center">
+          <div className="ml-6 flex items-center">
             {session ? (
               <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-600">
+                <span className="hidden sm:flex text-sm text-gray-600">
                   {session.user?.user_metadata?.full_name || session.user?.email}
                 </span>
                 <Button variant="outline" onClick={handleSignOut}>Sign Out</Button>

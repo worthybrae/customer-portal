@@ -115,7 +115,7 @@ const SurveyView: React.FC = () => {
             )}
           </div>
           <div>
-            <p className="text-sm text-gray-500">Survey by</p>
+            <p className="text-sm text-gray-500">Outreach by</p>
             <h3 className="font-medium">{survey.company.name}</h3>
           </div>
         </div>
