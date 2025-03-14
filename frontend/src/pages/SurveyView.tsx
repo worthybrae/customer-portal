@@ -5,12 +5,21 @@ import { supabase } from '@/lib/supabase'
 import { Survey, Question } from '@/types'
 import SurveyForm from '@/components/survey/SurveyForm'
 import { Toaster, toast } from 'sonner'
+import { Building } from 'lucide-react'
+
+// Extend Survey type to include company info when fetched
+interface SurveyWithCompany extends Survey {
+  company?: {
+    name: string;
+    logo_url?: string;
+  }
+}
 
 const SurveyView: React.FC = () => {
   const { surveyId } = useParams<{ surveyId: string }>()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
-  const [survey, setSurvey] = useState<Survey | null>(null)
+  const [survey, setSurvey] = useState<SurveyWithCompany | null>(null)
   const [questions, setQuestions] = useState<Question[]>([])
   
   useEffect(() => {
@@ -23,10 +32,16 @@ const SurveyView: React.FC = () => {
       try {
         setLoading(true)
         
-        // Fetch survey details
+        // Fetch survey details with company information
         const { data: surveyData, error: surveyError } = await supabase
           .from('surveys')
-          .select('*')
+          .select(`
+            *,
+            company:company_id (
+              name,
+              logo_url
+            )
+          `)
           .eq('id', surveyId)
           .single()
         
@@ -53,7 +68,7 @@ const SurveyView: React.FC = () => {
     }
     
     fetchSurvey()
-  }, [surveyId, navigate, toast])
+  }, [surveyId, navigate])
   
   if (loading) {
     return (
@@ -83,6 +98,29 @@ const SurveyView: React.FC = () => {
   
   return (
     <div className="max-w-3xl mx-auto">
+      {/* Company branding header */}
+      {survey.company && (
+        <div className="mb-6 flex items-center border-b pb-4">
+          <div className="mr-3">
+            {survey.company.logo_url ? (
+              <img 
+                src={survey.company.logo_url} 
+                alt={`${survey.company.name} logo`}
+                className="w-12 h-12 object-contain rounded-md"
+              />
+            ) : (
+              <div className="w-12 h-12 bg-gray-100 rounded-md flex items-center justify-center">
+                <Building className="h-6 w-6 text-gray-400" />
+              </div>
+            )}
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Survey by</p>
+            <h3 className="font-medium">{survey.company.name}</h3>
+          </div>
+        </div>
+      )}
+      
       <SurveyForm 
         survey={survey}
         questions={questions}

@@ -127,7 +127,7 @@ const CompanyDashboard: React.FC = () => {
       <div className="flex justify-center items-center py-20">
         <div className="text-center">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-4"></div>
-          <p>Loading surveys...</p>
+          <p>Loading outreaches...</p>
         </div>
       </div>
     )
@@ -159,12 +159,12 @@ const CompanyDashboard: React.FC = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">
-          {userCompany ? `${userCompany.name} Dashboard` : 'Company Dashboard'}
+          {userCompany ? `${userCompany.name}` : 'Company Dashboard'}
         </h1>
         <Link to="/survey/editor">
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            Create Survey
+            Create Outreach
           </Button>
         </Link>
       </div>
@@ -172,15 +172,15 @@ const CompanyDashboard: React.FC = () => {
       {surveys.length === 0 ? (
         <Card>
           <CardContent className="py-10 text-center">
-            <p className="text-lg font-medium">No surveys yet</p>
+            <p className="text-lg font-medium">No outreaches yet</p>
             <p className="text-sm text-gray-500 mt-2">
-              Create your first survey to get started
+              Create your first outreach to get started
             </p>
             <div className="mt-6">
               <Link to="/survey/editor">
                 <Button>
                   <Plus className="mr-2 h-4 w-4" />
-                  Create Survey
+                  Create Outreach
                 </Button>
               </Link>
             </div>
@@ -189,7 +189,7 @@ const CompanyDashboard: React.FC = () => {
       ) : (
         <Tabs defaultValue="all">
           <TabsList className="mb-4">
-            <TabsTrigger value="all">All Surveys</TabsTrigger>
+            <TabsTrigger value="all">All Outreaches</TabsTrigger>
             <TabsTrigger value="published">Published</TabsTrigger>
             <TabsTrigger value="drafts">Drafts</TabsTrigger>
           </TabsList>
@@ -212,7 +212,7 @@ const CompanyDashboard: React.FC = () => {
               {surveys.filter(s => s.is_published).length === 0 ? (
                 <Card>
                   <CardContent className="py-8 text-center">
-                    <p>No published surveys yet</p>
+                    <p>No published outreaches yet</p>
                   </CardContent>
                 </Card>
               ) : (
@@ -235,7 +235,7 @@ const CompanyDashboard: React.FC = () => {
               {surveys.filter(s => !s.is_published).length === 0 ? (
                 <Card>
                   <CardContent className="py-8 text-center">
-                    <p>No draft surveys</p>
+                    <p>No draft outreaches</p>
                   </CardContent>
                 </Card>
               ) : (

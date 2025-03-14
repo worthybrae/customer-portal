@@ -25,19 +25,15 @@ const Navbar: React.FC = () => {
               </Link>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <Link
-                to="/"
-                className="border-transparent text-gray-500 hover:border-primary hover:text-primary inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                Home
-              </Link>
               {session && (
-                <Link
-                  to="/company"
-                  className="border-transparent text-gray-500 hover:border-primary hover:text-primary inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Company Portal
-                </Link>
+                <>
+                  <Link
+                    to="/company"
+                    className="border-transparent text-gray-500 hover:border-primary hover:text-primary inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                  >
+                    Outreach
+                  </Link>
+                </>
               )}
             </div>
           </div>
