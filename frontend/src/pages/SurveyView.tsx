@@ -23,49 +23,66 @@ const SurveyView: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([])
   
   useEffect(() => {
-    const fetchSurvey = async () => {
-      if (!surveyId) {
-        navigate('/')
-        return
-      }
-      
-      try {
-        setLoading(true)
-        
-        // Fetch survey details with company information
-        const { data: surveyData, error: surveyError } = await supabase
-          .from('surveys')
-          .select(`
-            *,
-            company:company_id (
-              name,
-              logo_url
-            )
-          `)
-          .eq('id', surveyId)
-          .single()
-        
-        if (surveyError) throw surveyError
-        
-        // Fetch questions
-        const { data: questionsData, error: questionsError } = await supabase
-          .from('questions')
-          .select('*')
-          .eq('survey_id', surveyId)
-          .order('order', { ascending: true })
-        
-        if (questionsError) throw questionsError
-        
-        setSurvey(surveyData)
-        setQuestions(questionsData)
-      } catch (error) {
-        console.error('Error fetching survey:', error)
-        toast.error('Failed to load survey')
-        navigate('/')
-      } finally {
-        setLoading(false)
-      }
+    // Updated fetchSurvey function in SurveyView.tsx
+const fetchSurvey = async () => {
+  if (!surveyId) {
+    navigate('/')
+    return
+  }
+  
+  try {
+    setLoading(true)
+    
+    // Fetch survey details with company information
+    const { data: surveyData, error: surveyError } = await supabase
+      .from('surveys')
+      .select(`
+        *,
+        company:company_id (
+          name,
+          logo_url
+        )
+      `)
+      .eq('id', surveyId)
+      .maybeSingle() // Use maybeSingle instead of single
+    
+    if (surveyError) {
+      console.error('Error fetching survey:', surveyError)
+      toast.error('Failed to load survey')
+      navigate('/')
+      return
     }
+    
+    if (!surveyData) {
+      console.log('No survey found with ID:', surveyId)
+      setLoading(false)
+      return // Component will show "Survey Not Found" message
+    }
+    
+    // Fetch questions
+    const { data: questionsData, error: questionsError } = await supabase
+      .from('questions')
+      .select('*')
+      .eq('survey_id', surveyId)
+      .order('order', { ascending: true })
+    
+    if (questionsError) {
+      console.error('Error fetching questions:', questionsError)
+      toast.error('Failed to load survey questions')
+      navigate('/')
+      return
+    }
+    
+    setSurvey(surveyData)
+    setQuestions(questionsData || [])
+  } catch (error) {
+    console.error('Error in fetchSurvey:', error)
+    toast.error('Failed to load survey')
+    navigate('/')
+  } finally {
+    setLoading(false)
+  }
+}
     
     fetchSurvey()
   }, [surveyId, navigate])

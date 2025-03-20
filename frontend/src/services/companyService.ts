@@ -9,6 +9,7 @@ export interface CreateCompanyData {
   userId: string;
 }
 
+// Improved getUserCompany function to handle no results
 export const getUserCompany = async (userId: string) => {
   try {
     // Get user-company relationship
@@ -16,10 +17,15 @@ export const getUserCompany = async (userId: string) => {
       .from('user_companies')
       .select('company_id')
       .eq('user_id', userId)
-      .single()
+      .maybeSingle() // Use maybeSingle() instead of single()
 
     if (userCompanyError) {
-      // No company association found
+      console.error('Error fetching user company relationship:', userCompanyError)
+      return { company: null, error: userCompanyError }
+    }
+
+    // If no company association found
+    if (!userCompanyData) {
       return { company: null, error: null }
     }
 
@@ -28,9 +34,12 @@ export const getUserCompany = async (userId: string) => {
       .from('companies')
       .select('*')
       .eq('id', userCompanyData.company_id)
-      .single()
+      .maybeSingle() // Use maybeSingle() instead of single()
 
-    if (companyError) throw companyError
+    if (companyError) {
+      console.error('Error fetching company details:', companyError)
+      return { company: null, error: companyError }
+    }
 
     return { company, error: null }
   } catch (error: any) {
