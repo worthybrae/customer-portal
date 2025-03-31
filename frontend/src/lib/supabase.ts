@@ -134,7 +134,7 @@ export async function updateSurvey(surveyData: {
     questions?: SurveyQuestion[];
   }) {
     // First update the survey
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('surveys')
       .update({
         title: surveyData.title,
